@@ -8,7 +8,7 @@
         {{ btn.name }}
       </button>
     </div>
-    <chart-component :cartData="filterData" :heading="heading" :inTimeOrder="inTimeOrder"></chart-component>
+    <chart-component :cartData="filterData" :heading="headingReverse" :inTimeOrder="inTimeOrder"></chart-component>
     <div>
       <label v-for="(item, key) in dataName " :key="key" class="mr-2">
         <input type="checkbox" :value="item" v-model="selectedItem">
@@ -26,10 +26,8 @@
     <table class="table mt-3 table-hover table-sm table-striped">
       <thead>
         <tr>
-          <th>名稱</th>
-          <th v-for="th in inTimeOrder ?
-            heading.filter(item => item !== '名稱'):
-            heading.filter(item => item !== '名稱').reverse()" :key="th">
+          <th width="300">名稱</th>
+          <th v-for="th in headingReverse" :key="th">
             {{ th }}
           </th>
         </tr>
@@ -65,6 +63,9 @@ export default {
       },{
         name: '現金流量表',
         url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTdJTQF_ZnIbH-VAs5CkumipbKNA3Yen9Sciei7y2Ci813oSD0Nhee4OLFRVJDDAk3s8K8GRLskR5TQ/pub?gid=321885516&single=true&output=csv',
+      },{
+        name: '營收盈餘',
+        url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTdJTQF_ZnIbH-VAs5CkumipbKNA3Yen9Sciei7y2Ci813oSD0Nhee4OLFRVJDDAk3s8K8GRLskR5TQ/pub?gid=381274469&single=true&output=csv',
       },{
         name: '第一季同期損益表',
         url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTdJTQF_ZnIbH-VAs5CkumipbKNA3Yen9Sciei7y2Ci813oSD0Nhee4OLFRVJDDAk3s8K8GRLskR5TQ/pub?gid=777097944&single=true&output=csv',
@@ -117,7 +118,10 @@ export default {
 
         this.heading = []
         for (const key in this.sourceData[0]) {
-          this.heading.push(key);
+          if (key !== '名稱') {
+            console.log(key);
+            this.heading.push(key);
+          }
         }
         this.dataName = this.sourceData.map(item => item['名稱'])
         // console.log(this.sourceData, this.heading);
@@ -131,14 +135,12 @@ export default {
   computed: {
     filterData() {
       return this.sourceData.filter(item => this.selectedItem.includes(item['名稱']));
-    }
-  },
-  watch: {
-    heading() {
+    },
+    headingReverse() {
       if (this.inTimeOrder) {
         return this.heading;
       } else {
-        this.heading = this.heading.reverse();
+        return [...this.heading].reverse();
       }
     }
   },

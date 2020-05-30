@@ -73,9 +73,7 @@ export default {
       });
       // console.log('inTimeOrder', this.inTimeOrder)
       const lineChartData = {
-        labels: this.inTimeOrder ?
-          this.heading.filter(item => item !== '名稱'):
-          this.heading.filter(item => item !== '名稱').reverse(),
+        labels: this.heading,
         datasets
       }
 
